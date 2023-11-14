@@ -11,14 +11,14 @@ const BarChart = () => {
   const drawChart = () => {
     // Sample data
     const data = [
-      { category: 'Red', value: 10 },
-      { category: 'Blue', value: 20 },
-      { category: 'Yellow', value: 15 }
+      { category: 'Red', value: 34 },
+      { category: 'Blue', value: 12 },
+      { category: 'Yellow', value: 23 }
     ];
 
-    const chartWidth = 400;
-    const chartHeight = 200;
-    const barPadding = 5;
+    const chartWidth = 50;
+    const chartHeight = 500;
+    const barPadding = 10;
     const barWidth = (chartWidth / data.length);
 
     const svg = d3.select(d3Chart.current)
