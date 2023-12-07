@@ -5,12 +5,13 @@ import * as d3 from 'd3';
 const Heatmap = () => {
   const d3Chart = useRef();
   const [data, setData] = useState([
-    [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
   ]);
 
   useEffect(() => {
@@ -26,8 +27,26 @@ const Heatmap = () => {
     const width = data[0].length * gridSize;
     const height = data.length * gridSize;
 
-    const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, 10]);
-    const textColorScale = d3.scaleSequential(d3.interpolateOranges).domain([50, 0]);
+    // Function to find the maximum value in a list of lists
+    const findMaxValue = (data) => {
+      let maxValue = 1;
+      data.forEach(list => {
+        const maxInList = Math.max(...list);
+        if (maxInList > maxValue) {
+          maxValue = maxInList;
+        }
+      });
+      return maxValue;
+    };
+
+    // Find the maximum value in the data
+    const maxValue = findMaxValue(data);
+
+    // Update colorScale and textColorScale with the maximum value
+    const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, maxValue]);
+    const textColorScale = d3.scaleSequential(d3.interpolateOranges).domain([maxValue, 0]);
+
+    // Now, colorScale and textColorScale are updated with the maximum value from the data
 
     const svg = d3
       .select(d3Chart.current)
@@ -60,9 +79,9 @@ const Heatmap = () => {
       .text(d => d);
   };
 
-  const className = "button", handleRandomButtonClick = () => {
+  const handleRandomButtonClick = () => {
     const newData = [...data]; // Create a copy of the original data
-    const cellsToUpdate = 1;
+    const cellsToUpdate = 100;
 
     for (let i = 0; i < cellsToUpdate; i++) {
       const rowIndex = Math.floor(Math.random() * data.length);
@@ -82,12 +101,38 @@ const Heatmap = () => {
 
   return (
     <div>
-      <button onClick={handleRandomButtonClick}>Increment Random Value</button>
-      <button onClick={handleResetButtonClick}>Reset All Cells to Zero</button>
+      <div
+        style={{
+          padding: '10px',
+          margin: '5px',
+          backgroundColor: 'blue',
+          color: 'white',
+          cursor: 'pointer',
+          display: 'inline-block',
+          borderRadius: '5px',
+        }}
+        onClick={handleRandomButtonClick}
+      >
+        Increment Random Value
+      </div>
+      <div
+        style={{
+          padding: '10px',
+          margin: '5px',
+          backgroundColor: 'red',
+          color: 'white',
+          cursor: 'pointer',
+          display: 'inline-block',
+          borderRadius: '5px',
+        }}
+        onClick={handleResetButtonClick}
+      >
+        Reset All Cells to Zero
+      </div>
       <svg ref={d3Chart}></svg>
     </div>
   );
-};
+  };
 
 function App() {
   return (
